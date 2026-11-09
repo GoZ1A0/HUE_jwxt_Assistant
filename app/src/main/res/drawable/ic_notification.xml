@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="930" android:viewportHeight="930">
+    <group android:translateX="-162" android:translateY="-180">
+        <path android:fillColor="#000000" android:pathData="M298,271 H456 Q499,271 499,314 V679 Q499,722 456,722 H298 Q255,722 255,679 V314 Q255,271 298,271 Z" />
+        <path android:fillColor="#000000" android:pathData="M297,733 H457 Q499,733 499,775 V878 Q499,920 457,920 H297 Q255,920 255,878 V775 Q255,733 297,733 Z" />
+        <path android:fillColor="#000000" android:pathData="M552,320 H703 Q745,320 745,362 V484 Q745,526 703,526 H552 Q510,526 510,484 V362 Q510,320 552,320 Z" />
+        <path android:fillColor="#000000" android:pathData="M553,720 H702 Q745,720 745,763 V976 Q745,1019 702,1019 H553 Q510,1019 510,976 V763 Q510,720 553,720 Z" />
+        <path android:fillColor="#000000" android:pathData="M798,361 H959 Q1001,361 1001,403 V432 Q1001,474 959,474 H798 Q756,474 756,432 V403 Q756,361 798,361 Z" />
+        <path android:fillColor="#000000" android:pathData="M799,485 H958 Q1001,485 1001,528 V768 Q1001,811 958,811 H799 Q756,811 756,768 V528 Q756,485 799,485 Z" />
+        <path android:fillColor="#000000" android:pathData="M798,823 H959 Q1001,823 1001,865 V930 Q1001,972 959,972 H798 Q756,972 756,930 V865 Q756,823 798,823 Z" />
+    </group>
+</vector>
