@@ -145,6 +145,8 @@ fun AboutAppScreen(onBack: () -> Unit, onOpenSource: () -> Unit) {
         ContactRow("QQ", AppInfo.QQ, { copy(AppInfo.QQ) })
         ContactRow("邮箱", AppInfo.EMAIL, { copy(AppInfo.EMAIL) }, { open("mailto:${AppInfo.EMAIL}") })
         ContactRow("项目与问题反馈", AppInfo.PROJECT, { copy(AppInfo.PROJECT) }, { open(AppInfo.PROJECT) })
+        Text("1.1.2 更新", style = MaterialTheme.typography.titleMedium)
+        Text("桌面小组件改为今日剩余课表，已结束的安排移除；新增剩余数量、双列彩色卡片和没课状态。")
         Text("1.1.1 更新", style = MaterialTheme.typography.titleMedium)
         Text("课程网格支持跟随手指左右翻周，修复横向手势冲突；新增可添加到手机桌面的“今日课表”小组件及添加入口。")
         Text("1.1.0 更新", style = MaterialTheme.typography.titleMedium)

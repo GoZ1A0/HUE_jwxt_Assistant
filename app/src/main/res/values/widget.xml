@@ -1,6 +1,6 @@
 <resources>
-    <string name="widget_title">今日课表</string>
-    <string name="widget_description">查看今天的课程与已确认考试，点击打开课表</string>
+    <string name="widget_title">今日剩余课表</string>
+    <string name="widget_description">只看今天尚未结束的课程与考试，没有剩余安排时显示没课</string>
     <string name="widget_empty">打开应用，同步或导入一份课表</string>
     <string name="widget_open">点击打开课表</string>
     <string name="widget_refresh">刷新</string>
@@ -10,4 +10,9 @@
     <color name="widget_foreground">#17213C</color>
     <color name="widget_secondary">#4B5670</color>
     <color name="widget_accent">#1554BE</color>
+    <color name="widget_count">#BD3B62</color>
+    <color name="widget_card_blue">#DCE7FA</color>
+    <color name="widget_card_pink">#F2DEE5</color>
+    <color name="widget_card_purple">#E9E0F5</color>
+    <color name="widget_card_amber">#F5E6D4</color>
 </resources>

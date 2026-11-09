@@ -4,4 +4,9 @@
     <color name="widget_foreground">#EDF1FF</color>
     <color name="widget_secondary">#BEC9DF</color>
     <color name="widget_accent">#A9C7FF</color>
+    <color name="widget_count">#FF92AC</color>
+    <color name="widget_card_blue">#26384E</color>
+    <color name="widget_card_pink">#49323D</color>
+    <color name="widget_card_purple">#37334B</color>
+    <color name="widget_card_amber">#473D2D</color>
 </resources>
