@@ -145,6 +145,8 @@ fun AboutAppScreen(onBack: () -> Unit, onOpenSource: () -> Unit) {
         ContactRow("QQ", AppInfo.QQ, { copy(AppInfo.QQ) })
         ContactRow("邮箱", AppInfo.EMAIL, { copy(AppInfo.EMAIL) }, { open("mailto:${AppInfo.EMAIL}") })
         ContactRow("项目与问题反馈", AppInfo.PROJECT, { copy(AppInfo.PROJECT) }, { open(AppInfo.PROJECT) })
+        Text("1.1.1 更新", style = MaterialTheme.typography.titleMedium)
+        Text("课程网格支持跟随手指左右翻周，修复横向手势冲突；新增可添加到手机桌面的“今日课表”小组件及添加入口。")
         Text("1.1.0 更新", style = MaterialTheme.typography.titleMedium)
         Text("应用更名为 HUE教务助手；课表支持左右滑动翻周；统一菜单和课表设置；新增启动同步开关、隐私知情同意与关于页面。")
         SettingsEntry("开源组件", "查看主要依赖项目及其许可证", onOpenSource)

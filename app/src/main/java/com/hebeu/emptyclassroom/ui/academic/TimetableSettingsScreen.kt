@@ -13,7 +13,7 @@ import com.hebeu.emptyclassroom.ui.settings.SettingsPage
 fun TimetableSettingsScreen(state: TimetableState, onStartup: (Boolean) -> Unit, onManage: () -> Unit,
     onCalendar: () -> Unit, onStyle: () -> Unit, onReminders: () -> Unit, onToggleList: () -> Unit,
     onSync: () -> Unit, onHistory: () -> Unit, onExams: () -> Unit, onImport: () -> Unit,
-    onExport: () -> Unit, onBack: () -> Unit) {
+    onExport: () -> Unit, onBack: () -> Unit, onWidgets: () -> Unit = {}) {
     SettingsPage("课表设置", onBack) {
         Text(state.name, style = MaterialTheme.typography.titleLarge)
         ElevatedCard {
@@ -35,6 +35,7 @@ fun TimetableSettingsScreen(state: TimetableState, onStartup: (Boolean) -> Unit,
         Text("考试与提醒", style = MaterialTheme.typography.titleSmall)
         SettingsEntry("提醒与课程实况", "课程、考试提醒与系统展示", onReminders)
         SettingsEntry("考试日程", "按实际日期查看考试与时间冲突", onExams)
+        SettingsEntry("桌面小组件", "添加今日课表到手机桌面", onWidgets)
         Text("教务同步", style = MaterialTheme.typography.titleSmall)
         if (state.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
         SettingsEntry("检查教务更新", "拉取课表、调课消息、考试和课程成绩", onSync)

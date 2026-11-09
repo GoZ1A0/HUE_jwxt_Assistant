@@ -1,0 +1,13 @@
+<resources>
+    <string name="widget_title">今日课表</string>
+    <string name="widget_description">查看今天的课程与已确认考试，点击打开课表</string>
+    <string name="widget_empty">打开应用，同步或导入一份课表</string>
+    <string name="widget_open">点击打开课表</string>
+    <string name="widget_refresh">刷新</string>
+    <string name="widget_refresh_description">刷新本地课表小组件</string>
+    <color name="widget_background">#F3F5FF</color>
+    <color name="widget_row_background">#E2E8FF</color>
+    <color name="widget_foreground">#17213C</color>
+    <color name="widget_secondary">#4B5670</color>
+    <color name="widget_accent">#1554BE</color>
+</resources>

@@ -17,6 +17,7 @@ import com.hebeu.emptyclassroom.domain.model.ReminderSettings
 import com.hebeu.emptyclassroom.domain.model.ScheduleData
 import com.hebeu.emptyclassroom.domain.model.ImportedLessonTime
 import com.hebeu.emptyclassroom.domain.model.ExamInfo
+import com.hebeu.emptyclassroom.data.widget.TimetableWidgetProvider
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
@@ -50,10 +51,10 @@ class CourseReminderController(context: Context) {
         clearOwnedNotifications()
         store.save(ReminderSnapshot(schedule, settings.normalized(), lessonTimes = lessonTimes,
             courseColors = courseColors, displayName = displayName, exams = exams, delivered = store.load().delivered))
-        refresh(processDue = false)
+        refresh(processDue = false).also { TimetableWidgetProvider.refreshAll(context) }
     }
 
-    fun reschedule(): ReminderStatus = synchronized(lock) { refresh(processDue = true) }
+    fun reschedule(): ReminderStatus = synchronized(lock) { refresh(processDue = true).also { TimetableWidgetProvider.refreshAll(context) } }
 
     fun status(): ReminderStatus = synchronized(lock) {
         val saved = store.load()
@@ -66,6 +67,7 @@ class CourseReminderController(context: Context) {
         clearOwnedNotifications()
         if (clearSavedSchedule) store.clear()
         else store.save(store.load().copy(settings = ReminderSettings(), nextAlarmAt = null, delivered = emptySet()))
+        TimetableWidgetProvider.refreshAll(context)
     }
 
     internal fun handleAlarm() = synchronized(lock) { refresh(processDue = true); Unit }

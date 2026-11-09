@@ -9,13 +9,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.ui.platform.testTag
 import com.hebeu.emptyclassroom.ui.settings.*
@@ -64,6 +57,7 @@ fun TimetableRoute(viewModel: TimetableViewModel, onAccount: () -> Unit, onLogou
     var reminders by remember { mutableStateOf(false) }
     var history by remember { mutableStateOf(false) }
     var exams by remember { mutableStateOf(false) }
+    var widgets by remember { mutableStateOf(false) }
     var editing by remember { mutableStateOf(false) }
     var initial by remember { mutableStateOf<Lesson?>(null) }
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { viewModel.refreshReminderStatus() }
@@ -92,6 +86,7 @@ fun TimetableRoute(viewModel: TimetableViewModel, onAccount: () -> Unit, onLogou
     if (state.showUpdateReview && handleReview) AcademicReviewDialog(state, viewModel::acceptUpdates, viewModel::deferUpdates)
     if (history) AcademicHistoryDialog(state, viewModel::reviewUpdates, viewModel::undoUpdate) { history = false }
     if (exams) AcademicExamsDialog(state, viewModel::date, onDismiss = { exams = false }, onReview = viewModel::reviewUpdates)
+    if (widgets) TimetableWidgetDialog { widgets = false }
     val pickImport = { import.launch(arrayOf("*/*")) }
     if (manage) TimetableManagerDialog(state, viewModel::selectProfile,
         onCreate = { viewModel.create(); manage = false; calendar = true },
@@ -115,7 +110,8 @@ fun TimetableRoute(viewModel: TimetableViewModel, onAccount: () -> Unit, onLogou
         onManage = { manage = true }, onCalendar = { calendar = true }, onStyle = { style = true },
         onReminders = { reminders = true }, onToggleList = viewModel::toggleList, onSync = viewModel::checkUpdates,
         onHistory = { history = true }, onExams = { exams = true }, onImport = pickImport,
-        onExport = { if (state.schedule != null) export.launch("${state.name}.json") }, onBack = onBack)
+        onExport = { if (state.schedule != null) export.launch("${state.name}.json") }, onBack = onBack,
+        onWidgets = { widgets = true })
     else TimetableHome(state, onWeek = viewModel::week, onToday = viewModel::today,
         onManage = { manage = true }, onStyle = { style = true }, onReminders = { reminders = true },
         onAccount = onAccount, onLogout = onLogout, onImport = pickImport,
@@ -212,21 +208,12 @@ fun TimetableHome(state: TimetableState, onWeek: (Int) -> Unit, onToday: () -> U
                                 }
                             }
                         }
-                    } else BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
-                        val days = 5 + (if (appearance.showSaturday) 1 else 0) + (if (appearance.showSunday) 1 else 0)
-                        val fits = maxWidth >= (days * 42 + (if (appearance.showTimes) 42 else 28) + 8).dp
-                        AnimatedContent(state.week,
-                            modifier = Modifier.fillMaxSize().testTag("week-board").weekSwipe(state.week, state.maxWeek, fits, onWeek),
-                            transitionSpec = {
-                                val direction = if (targetState > initialState) 1 else -1
-                                (slideInHorizontally(tween(220)) { it * direction } + fadeIn(tween(180))) togetherWith
-                                    (slideOutHorizontally(tween(220)) { -it * direction } + fadeOut(tween(160)))
-                            }, label = "timetableWeek") { displayedWeek ->
+                    } else WeekPager(state.week, state.maxWeek,
+                        Modifier.weight(1f).fillMaxWidth().testTag("week-board"), onWeek) { displayedWeek ->
                             TimetableBoard(data, displayedWeek, appearance, state.colors, Modifier.fillMaxSize(),
                                 onLesson = { if (displayedWeek == state.week) detail = it },
                                 onOverlap = { if (displayedWeek == state.week) overlapping = it }, exams = state.exams,
-                                onExamDay = onExams, scrollState = boardScroll)
-                        }
+                                onExamDay = onExams, scrollState = boardScroll, fitToViewport = true)
                     }
                 }
             }
@@ -300,7 +287,8 @@ private fun blocks(lesson: Lesson): List<BoardBlock> {
 @Composable
 fun TimetableBoard(data: ScheduleData, week: Int, appearance: TimetableAppearance, colors: Map<String, String>,
     modifier: Modifier = Modifier, onLesson: (Lesson) -> Unit, onOverlap: (List<Lesson>) -> Unit = { onLesson(it.first()) },
-    exams: List<ExamInfo> = emptyList(), onExamDay: () -> Unit = {}, scrollState: ScrollState? = null) {
+    exams: List<ExamInfo> = emptyList(), onExamDay: () -> Unit = {}, scrollState: ScrollState? = null,
+    fitToViewport: Boolean = false) {
     val days = (if (appearance.sundayFirst) listOf(7, 1, 2, 3, 4, 5, 6) else (1..7).toList())
         .filter { (it != 6 || appearance.showSaturday) && (it != 7 || appearance.showSunday) }
     val lessons = data.lessons.filter { it.scheduled && (week in it.weeks || appearance.showOtherWeeks) }
@@ -317,8 +305,11 @@ fun TimetableBoard(data: ScheduleData, week: Int, appearance: TimetableAppearanc
     val material = listOf(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.tertiaryContainer)
     BoxWithConstraints(modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
         val axis = if (appearance.showTimes) 42.dp else 28.dp
-        val dayWidth = ((maxWidth - axis) / days.size).coerceAtLeast(42.dp)
-        Column(Modifier.horizontalScroll(rememberScrollState()).width(axis + dayWidth * days.size).fillMaxHeight()) {
+        val available = ((maxWidth - axis) / days.size).coerceAtLeast(1.dp)
+        val dayWidth = if (fitToViewport) available else available.coerceAtLeast(42.dp)
+        val columnsScroll = rememberScrollState()
+        Column(Modifier.then(if (!fitToViewport && dayWidth > available) Modifier.horizontalScroll(columnsScroll) else Modifier)
+            .width(axis + dayWidth * days.size).fillMaxHeight()) {
             Row(Modifier.height(52.dp)) {
                 Box(Modifier.width(axis).fillMaxHeight(), contentAlignment = Alignment.Center) {
                     Text(start?.let { "${it.monthValue}\n月" } ?: "节次", color = headerColor, style = MaterialTheme.typography.labelMedium, textAlign = TextAlign.Center)

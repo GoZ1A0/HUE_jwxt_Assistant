@@ -19,6 +19,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EmptyClassroom">
 
+        <receiver android:name=".data.widget.TimetableWidgetProvider" android:exported="false"
+            android:label="@string/widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/timetable_widget_info" />
+        </receiver>
         <receiver android:name=".data.reminder.CourseReminderReceiver" android:exported="false" />
         <receiver android:name=".data.reminder.CourseReminderRestoreReceiver" android:exported="false">
             <intent-filter>
